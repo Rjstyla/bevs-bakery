@@ -56,6 +56,22 @@ export function OrderForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    
+    // Save to local storage for demo purposes
+    const newOrder = {
+      id: Date.now().toString(),
+      ...values,
+      date: new Date().toISOString(),
+      status: "pending"
+    };
+    
+    try {
+      const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]");
+      localStorage.setItem("orders", JSON.stringify([newOrder, ...existingOrders]));
+    } catch (e) {
+      console.error("Failed to save order to local storage", e);
+    }
+
     toast({
       title: "Request Sent!",
       description: `We've received your order for ${values.products.cake > 0 ? `${values.products.cake} Cake(s)` : ""} ${values.products.cake > 0 && values.products.sorrel > 0 ? "and" : ""} ${values.products.sorrel > 0 ? `${values.products.sorrel} Sorrel` : ""}. We'll contact you shortly.`,
