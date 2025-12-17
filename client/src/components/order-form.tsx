@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
+import { Minus, Plus } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -26,8 +27,12 @@ const formSchema = z.object({
   phone: z.string().min(10, {
     message: "Please enter a valid phone number.",
   }),
-  products: z.array(z.string()).refine((value) => value.length > 0, {
-    message: "You must select at least one item.",
+  products: z.object({
+    cake: z.number().min(0),
+    sorrel: z.number().min(0),
+  }).refine((data) => data.cake > 0 || data.sorrel > 0, {
+    message: "You must order at least one item.",
+    path: ["root"], // This will attach the error to the root of the products object, or handled manually
   }),
   specialRequests: z.string().optional(),
 });
@@ -41,7 +46,10 @@ export function OrderForm() {
       name: "",
       email: "",
       phone: "",
-      products: [],
+      products: {
+        cake: 0,
+        sorrel: 0,
+      },
       specialRequests: "",
     },
   });
@@ -50,11 +58,17 @@ export function OrderForm() {
     console.log(values);
     toast({
       title: "Request Sent!",
-      description: "We've received your order request. We'll contact you shortly to confirm.",
+      description: `We've received your order for ${values.products.cake > 0 ? `${values.products.cake} Cake(s)` : ""} ${values.products.cake > 0 && values.products.sorrel > 0 ? "and" : ""} ${values.products.sorrel > 0 ? `${values.products.sorrel} Sorrel` : ""}. We'll contact you shortly.`,
       className: "bg-secondary text-secondary-foreground border-primary",
     });
     form.reset();
   }
+
+  const updateQuantity = (product: "cake" | "sorrel", change: number) => {
+    const current = form.getValues(`products.${product}`);
+    const newValue = Math.max(0, current + change);
+    form.setValue(`products.${product}`, newValue);
+  };
 
   return (
     <div className="w-full max-w-md mx-auto p-6 bg-card rounded-xl shadow-xl border border-border/40">
@@ -100,7 +114,7 @@ export function OrderForm() {
                 <FormItem>
                   <FormLabel>Phone</FormLabel>
                   <FormControl>
-                    <Input placeholder="(876) 555-0123" {...field} className="bg-background/50 border-input/60 focus:border-primary transition-colors" data-testid="input-phone" />
+                    <Input placeholder="07123 456789" {...field} className="bg-background/50 border-input/60 focus:border-primary transition-colors" data-testid="input-phone" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -108,97 +122,97 @@ export function OrderForm() {
             />
           </div>
 
-          <FormField
-            control={form.control}
-            name="products"
-            render={() => (
-              <FormItem>
-                <div className="mb-4">
-                  <FormLabel className="text-base">Select Items</FormLabel>
-                  <FormDescription>
-                    Choose the treats you're interested in.
-                  </FormDescription>
-                </div>
-                <div className="space-y-3">
-                  <FormField
-                    control={form.control}
-                    name="products"
-                    render={({ field }) => {
-                      return (
-                        <FormItem
-                          key="cake"
-                          className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 hover:bg-muted/20 transition-colors"
-                        >
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes("8-inch Christmas Fruit Cake")}
-                              onCheckedChange={(checked) => {
-                                return checked
-                                  ? field.onChange([...field.value, "8-inch Christmas Fruit Cake"])
-                                  : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== "8-inch Christmas Fruit Cake"
-                                      )
-                                    )
-                              }}
-                              className="data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground border-primary"
-                              data-testid="checkbox-cake"
-                            />
-                          </FormControl>
-                          <div className="space-y-1 leading-none">
-                            <FormLabel className="font-serif text-secondary text-base">
-                              8-inch Christmas Fruit Cake
-                            </FormLabel>
-                            <FormDescription>
-                              Rich, boozy, and packed with fruits.
-                            </FormDescription>
-                          </div>
-                        </FormItem>
-                      )
-                    }}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="products"
-                    render={({ field }) => {
-                      return (
-                        <FormItem
-                          key="sorrel"
-                          className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 hover:bg-muted/20 transition-colors"
-                        >
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes("Bottle of Sorrel")}
-                              onCheckedChange={(checked) => {
-                                return checked
-                                  ? field.onChange([...field.value, "Bottle of Sorrel"])
-                                  : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== "Bottle of Sorrel"
-                                      )
-                                    )
-                              }}
-                              className="data-[state=checked]:bg-accent data-[state=checked]:text-accent-foreground border-accent"
-                              data-testid="checkbox-sorrel"
-                            />
-                          </FormControl>
-                          <div className="space-y-1 leading-none">
-                            <FormLabel className="font-serif text-accent text-base">
-                              Bottle of Sorrel
-                            </FormLabel>
-                            <FormDescription>
-                              Spiced with ginger and pimento.
-                            </FormDescription>
-                          </div>
-                        </FormItem>
-                      )
-                    }}
-                  />
-                </div>
-                <FormMessage />
-              </FormItem>
+          <div className="space-y-4">
+            <div className="mb-2">
+              <FormLabel className="text-base">Select Items</FormLabel>
+              <FormDescription>
+                Choose quantity for each item.
+              </FormDescription>
+            </div>
+            
+            <FormField
+              control={form.control}
+              name="products.cake"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-md border p-4 hover:bg-muted/20 transition-colors">
+                  <div className="space-y-0.5">
+                    <FormLabel className="font-serif text-secondary text-base block">
+                      Christmas Fruit Cake
+                    </FormLabel>
+                    <FormDescription>
+                      8-inch, Rum Soaked
+                    </FormDescription>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="icon" 
+                      className="h-8 w-8 rounded-full border-primary/50 text-secondary hover:bg-primary/10"
+                      onClick={() => updateQuantity("cake", -1)}
+                      data-testid="btn-cake-minus"
+                    >
+                      <Minus className="h-3 w-3" />
+                    </Button>
+                    <span className="font-mono text-lg font-bold min-w-[1.5rem] text-center" data-testid="count-cake">{field.value}</span>
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="icon" 
+                      className="h-8 w-8 rounded-full border-primary/50 text-secondary hover:bg-primary/10"
+                      onClick={() => updateQuantity("cake", 1)}
+                      data-testid="btn-cake-plus"
+                    >
+                      <Plus className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="products.sorrel"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-md border p-4 hover:bg-muted/20 transition-colors">
+                  <div className="space-y-0.5">
+                    <FormLabel className="font-serif text-accent text-base block">
+                      Bottle of Sorrel
+                    </FormLabel>
+                    <FormDescription>
+                      750ml, Spiced
+                    </FormDescription>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="icon" 
+                      className="h-8 w-8 rounded-full border-accent/50 text-accent hover:bg-accent/10"
+                      onClick={() => updateQuantity("sorrel", -1)}
+                      data-testid="btn-sorrel-minus"
+                    >
+                      <Minus className="h-3 w-3" />
+                    </Button>
+                    <span className="font-mono text-lg font-bold min-w-[1.5rem] text-center" data-testid="count-sorrel">{field.value}</span>
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="icon" 
+                      className="h-8 w-8 rounded-full border-accent/50 text-accent hover:bg-accent/10"
+                      onClick={() => updateQuantity("sorrel", 1)}
+                      data-testid="btn-sorrel-plus"
+                    >
+                      <Plus className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </FormItem>
+              )}
+            />
+            {form.formState.errors.products && (
+               <p className="text-sm font-medium text-destructive mt-2">You must select at least one item.</p>
             )}
-          />
+          </div>
 
           <FormField
             control={form.control}

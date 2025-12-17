@@ -57,7 +57,7 @@ export default function Home() {
               <ProductCard
                 title="Christmas Fruit Cake"
                 description="Our signature 8-inch cake. Fruits soaked in Red Label Wine and White Overproof Rum for months, baked slow and low for that perfect moist, dark texture."
-                price="$45.00"
+                price="£45.00"
                 image={cakeImage}
                 tags={["8-inch", "Rum Soaked", "Traditional"]}
                 onOrder={scrollToForm}
@@ -74,7 +74,7 @@ export default function Home() {
               <ProductCard
                 title="Jamaican Sorrel"
                 description="Fresh sorrel petals brewed with ginger, pimento, and a hint of lime. A deep red, refreshing holiday classic served in a premium glass bottle."
-                price="$15.00"
+                price="£15.00"
                 image={sorrelImage}
                 tags={["750ml", "Fresh Brewed", "Spiced"]}
                 onOrder={scrollToForm}
@@ -96,8 +96,8 @@ export default function Home() {
               </p>
               <div className="p-6 bg-white rounded-xl shadow-sm border border-border/50">
                 <h4 className="font-serif font-bold text-secondary mb-2">Contact Us Directly</h4>
-                <p className="text-muted-foreground">bevsbakery@example.com</p>
-                <p className="text-muted-foreground">(876) 555-0199</p>
+                <p className="text-muted-foreground">rls_johnson@hotmail.com</p>
+                <p className="text-muted-foreground">07852220010</p>
               </div>
             </div>
             
