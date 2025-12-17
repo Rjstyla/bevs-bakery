@@ -23,31 +23,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Lock, LogOut } from "lucide-react";
-
-// Mock Data Seeder
-const SEED_ORDERS = [
-  {
-    id: "1702839201",
-    name: "Michael Scott",
-    email: "michael@dundermifflin.com",
-    phone: "07700 900461",
-    products: { cake: 2, sorrel: 1 },
-    specialRequests: "Extra moist please!",
-    date: "2024-12-15T10:30:00.000Z",
-    status: "pending"
-  },
-  {
-    id: "1702849102",
-    name: "Pam Beesly",
-    email: "pam@dundermifflin.com",
-    phone: "07700 900321",
-    products: { cake: 1, sorrel: 3 },
-    specialRequests: "",
-    date: "2024-12-16T14:15:00.000Z",
-    status: "completed"
-  }
-];
+import { Lock, LogOut, RefreshCw } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -56,7 +33,6 @@ const loginSchema = z.object({
 
 export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [orders, setOrders] = useState<any[]>([]);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -67,27 +43,29 @@ export default function Admin() {
     },
   });
 
+  const { data: orders = [], isLoading, refetch } = useQuery({
+    queryKey: ["orders"],
+    queryFn: async () => {
+      const response = await fetch("/api/orders");
+      if (!response.ok) {
+        throw new Error("Failed to fetch orders");
+      }
+      return response.json();
+    },
+    enabled: isAuthenticated,
+  });
+
   useEffect(() => {
-    // Check if already logged in (mock session)
     const isAuth = sessionStorage.getItem("isAdminAuth");
     if (isAuth === "true") {
       setIsAuthenticated(true);
-      loadOrders();
     }
   }, []);
 
-  const loadOrders = () => {
-    const localOrders = JSON.parse(localStorage.getItem("orders") || "[]");
-    // Combine seed data with local data for the demo
-    setOrders([...localOrders, ...SEED_ORDERS]);
-  };
-
   function onLogin(values: z.infer<typeof loginSchema>) {
-    // Mock Credentials
     if (values.username === "admin" && values.password === "password") {
       setIsAuthenticated(true);
       sessionStorage.setItem("isAdminAuth", "true");
-      loadOrders();
       toast({
         title: "Welcome back",
         description: "You have successfully logged in.",
@@ -127,7 +105,7 @@ export default function Admin() {
                     <FormItem>
                       <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <Input placeholder="admin" {...field} />
+                        <Input placeholder="admin" {...field} data-testid="input-username" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -140,13 +118,13 @@ export default function Admin() {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="••••••••" {...field} />
+                        <Input type="password" placeholder="••••••••" {...field} data-testid="input-password" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full bg-secondary hover:bg-secondary/90">
+                <Button type="submit" className="w-full bg-secondary hover:bg-secondary/90" data-testid="button-login">
                   Login
                 </Button>
               </form>
@@ -165,73 +143,83 @@ export default function Admin() {
             <h1 className="text-3xl font-serif font-bold text-secondary">Order Dashboard</h1>
             <p className="text-muted-foreground">Manage incoming requests from the website.</p>
           </div>
-          <Button variant="outline" onClick={onLogout} className="gap-2">
-            <LogOut className="w-4 h-4" />
-            Logout
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => refetch()} className="gap-2">
+              <RefreshCw className="w-4 h-4" />
+              Refresh
+            </Button>
+            <Button variant="outline" onClick={onLogout} className="gap-2" data-testid="button-logout">
+              <LogOut className="w-4 h-4" />
+              Logout
+            </Button>
+          </div>
         </div>
 
         <Card className="border-none shadow-lg">
           <CardContent className="p-0">
-            <Table>
-              <TableHeader className="bg-muted/50">
-                <TableRow>
-                  <TableHead className="w-[100px]">Date</TableHead>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Items</TableHead>
-                  <TableHead className="hidden md:table-cell">Contact</TableHead>
-                  <TableHead className="hidden md:table-cell">Notes</TableHead>
-                  <TableHead className="text-right">Total</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {orders.length === 0 ? (
+            {isLoading ? (
+              <div className="text-center py-12 text-muted-foreground">Loading orders...</div>
+            ) : (
+              <Table>
+                <TableHeader className="bg-muted/50">
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
-                      No orders found yet.
-                    </TableCell>
+                    <TableHead className="w-[100px]">Date</TableHead>
+                    <TableHead>Customer</TableHead>
+                    <TableHead>Items</TableHead>
+                    <TableHead className="hidden md:table-cell">Contact</TableHead>
+                    <TableHead className="hidden md:table-cell">Notes</TableHead>
+                    <TableHead className="text-right">Total</TableHead>
                   </TableRow>
-                ) : (
-                  orders.map((order) => {
-                    const total = (order.products.cake * 15) + (order.products.sorrel * 5);
-                    return (
-                      <TableRow key={order.id}>
-                        <TableCell className="font-medium text-xs text-muted-foreground">
-                          {new Date(order.date).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell>
-                          <div className="font-semibold text-secondary">{order.name}</div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-col gap-1">
-                            {order.products.cake > 0 && (
-                              <Badge variant="outline" className="w-fit bg-primary/10 border-primary/20 text-secondary-foreground">
-                                {order.products.cake}x Cake
-                              </Badge>
-                            )}
-                            {order.products.sorrel > 0 && (
-                              <Badge variant="outline" className="w-fit bg-accent/10 border-accent/20 text-accent">
-                                {order.products.sorrel}x Sorrel
-                              </Badge>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell text-sm">
-                          <div>{order.email}</div>
-                          <div className="text-muted-foreground">{order.phone}</div>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell max-w-[200px] truncate text-sm text-muted-foreground" title={order.specialRequests}>
-                          {order.specialRequests || "-"}
-                        </TableCell>
-                        <TableCell className="text-right font-bold text-secondary">
-                          £{total.toFixed(2)}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-                )}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {orders.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
+                        No orders found yet.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    orders.map((order: any) => {
+                      const total = (order.cakeQuantity * 15) + (order.sorrelQuantity * 5);
+                      return (
+                        <TableRow key={order.id} data-testid={`order-row-${order.id}`}>
+                          <TableCell className="font-medium text-xs text-muted-foreground">
+                            {new Date(order.createdAt).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell>
+                            <div className="font-semibold text-secondary">{order.name}</div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex flex-col gap-1">
+                              {order.cakeQuantity > 0 && (
+                                <Badge variant="outline" className="w-fit bg-primary/10 border-primary/20 text-secondary-foreground">
+                                  {order.cakeQuantity}x Cake
+                                </Badge>
+                              )}
+                              {order.sorrelQuantity > 0 && (
+                                <Badge variant="outline" className="w-fit bg-accent/10 border-accent/20 text-accent">
+                                  {order.sorrelQuantity}x Sorrel
+                                </Badge>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell text-sm">
+                            <div>{order.email}</div>
+                            <div className="text-muted-foreground">{order.phone}</div>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell max-w-[200px] truncate text-sm text-muted-foreground" title={order.specialRequests}>
+                            {order.specialRequests || "-"}
+                          </TableCell>
+                          <TableCell className="text-right font-bold text-secondary">
+                            £{total.toFixed(2)}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  )}
+                </TableBody>
+              </Table>
+            )}
           </CardContent>
         </Card>
       </div>

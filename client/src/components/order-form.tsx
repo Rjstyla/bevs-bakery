@@ -13,9 +13,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Minus, Plus } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -32,7 +32,7 @@ const formSchema = z.object({
     sorrel: z.number().min(0),
   }).refine((data) => data.cake > 0 || data.sorrel > 0, {
     message: "You must order at least one item.",
-    path: ["root"], // This will attach the error to the root of the products object, or handled manually
+    path: ["root"],
   }),
   specialRequests: z.string().optional(),
 });
@@ -54,30 +54,49 @@ export function OrderForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    
-    // Save to local storage for demo purposes
-    const newOrder = {
-      id: Date.now().toString(),
-      ...values,
-      date: new Date().toISOString(),
-      status: "pending"
-    };
-    
-    try {
-      const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]");
-      localStorage.setItem("orders", JSON.stringify([newOrder, ...existingOrders]));
-    } catch (e) {
-      console.error("Failed to save order to local storage", e);
-    }
+  const createOrderMutation = useMutation({
+    mutationFn: async (values: z.infer<typeof formSchema>) => {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email,
+          phone: values.phone,
+          cakeQuantity: values.products.cake,
+          sorrelQuantity: values.products.sorrel,
+          specialRequests: values.specialRequests || "",
+        }),
+      });
 
-    toast({
-      title: "Request Sent!",
-      description: `We've received your order for ${values.products.cake > 0 ? `${values.products.cake} Cake(s)` : ""} ${values.products.cake > 0 && values.products.sorrel > 0 ? "and" : ""} ${values.products.sorrel > 0 ? `${values.products.sorrel} Sorrel` : ""}. We'll contact you shortly.`,
-      className: "bg-secondary text-secondary-foreground border-primary",
-    });
-    form.reset();
+      if (!response.ok) {
+        throw new Error("Failed to submit order");
+      }
+
+      return response.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Request Sent!",
+        description: `We've received your order for ${data.cakeQuantity > 0 ? `${data.cakeQuantity} Cake(s)` : ""} ${data.cakeQuantity > 0 && data.sorrelQuantity > 0 ? "and" : ""} ${data.sorrelQuantity > 0 ? `${data.sorrelQuantity} Sorrel` : ""}. We'll contact you shortly.`,
+        className: "bg-secondary text-secondary-foreground border-primary",
+      });
+      form.reset();
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to submit your order. Please try again.",
+      });
+      console.error("Order submission error:", error);
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    createOrderMutation.mutate(values);
   }
 
   const updateQuantity = (product: "cake" | "sorrel", change: number) => {
@@ -248,7 +267,14 @@ export function OrderForm() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg h-12 shadow-md hover:shadow-lg transition-all" data-testid="button-submit">Submit Request</Button>
+          <Button 
+            type="submit" 
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg h-12 shadow-md hover:shadow-lg transition-all" 
+            data-testid="button-submit"
+            disabled={createOrderMutation.isPending}
+          >
+            {createOrderMutation.isPending ? "Submitting..." : "Submit Request"}
+          </Button>
         </form>
       </Form>
     </div>
