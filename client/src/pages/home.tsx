@@ -57,7 +57,7 @@ export default function Home() {
               <ProductCard
                 title="Christmas Fruit Cake"
                 description="Our signature 8-inch cake. Fruits soaked in Red Label Wine and White Overproof Rum for months, baked slow and low for that perfect moist, dark texture."
-                price="£45.00"
+                price="£15.00"
                 image={cakeImage}
                 tags={["8-inch", "Rum Soaked", "Traditional"]}
                 onOrder={scrollToForm}
@@ -74,7 +74,7 @@ export default function Home() {
               <ProductCard
                 title="Jamaican Sorrel"
                 description="Fresh sorrel petals brewed with ginger, pimento, and a hint of lime. A deep red, refreshing holiday classic served in a premium glass bottle."
-                price="£15.00"
+                price="£5.00"
                 image={sorrelImage}
                 tags={["750ml", "Fresh Brewed", "Spiced"]}
                 onOrder={scrollToForm}
