@@ -124,10 +124,10 @@ export function OrderForm() {
 
           <div className="space-y-4">
             <div className="mb-2">
-              <FormLabel className="text-base">Select Items</FormLabel>
-              <FormDescription>
+              <label className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Select Items</label>
+              <p className="text-[0.8rem] text-muted-foreground">
                 Choose quantity for each item.
-              </FormDescription>
+              </p>
             </div>
             
             <FormField
