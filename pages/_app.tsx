@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { Toaster } from '../components/ui/toaster'
-import { TooltipProvider } from '../components/ui/tooltip'
+import { Toaster } from './components/ui/toaster'
+import { TooltipProvider } from './components/ui/tooltip'
 import '../styles/globals.css'
 
 const queryClient = new QueryClient()
