@@ -5,9 +5,9 @@ import { OrderForm } from "@/components/order-form";
 import { motion } from "framer-motion";
 
 // Import generated assets
-import heroImage from "../../attached_assets/generated_images/elegant_dark_mood_jamaican_spices_and_ingredients.png";
-import cakeImage from "../../attached_assets/generated_images/rich_jamaican_christmas_fruit_cake.png";
-import sorrelImage from "../../attached_assets/generated_images/refreshing_jamaican_sorrel_drink.png";
+const heroImage = "/generated_images/elegant_dark_mood_jamaican_spices_and_ingredients.png";
+const cakeImage = "/generated_images/rich_jamaican_christmas_fruit_cake.png";
+const sorrelImage = "/generated_images/refreshing_jamaican_sorrel_drink.png";
 
 export default function Home() {
   const formSectionRef = useRef<HTMLDivElement>(null);
