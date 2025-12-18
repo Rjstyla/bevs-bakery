@@ -3,34 +3,14 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "devCommand": "npm run dev:client",
-  "env": [
-    {
-      "key": "VITE_SUPABASE_URL",
-      "scope": "production"
-    },
-    {
-      "key": "VITE_SUPABASE_ANON_KEY",
-      "scope": "production"
-    },
-    {
-      "key": "SUPABASE_SERVICE_ROLE_KEY",
-      "scope": "production"
-    },
-    {
-      "key": "DATABASE_URL",
-      "scope": "production"
-    },
-    {
-      "key": "NODE_ENV",
-      "value": "production",
-      "scope": "production"
-    },
-    {
-      "key": "VITE_API_URL",
-      "value": "",
-      "scope": "production"
-    }
-  ],
+  "env": {
+    "VITE_SUPABASE_URL": "",
+    "VITE_SUPABASE_ANON_KEY": "",
+    "SUPABASE_SERVICE_ROLE_KEY": "",
+    "DATABASE_URL": "",
+    "NODE_ENV": "production",
+    "VITE_API_URL": ""
+  },
   "functions": {
     "server": {
       "runtime": "nodejs20.x",
