@@ -1,13 +1,13 @@
 import { useRef } from "react";
-import { Hero } from "@/components/hero";
-import { ProductCard } from "@/components/product-card";
-import { OrderForm } from "@/components/order-form";
+import { Hero } from "../components/hero";
+import { ProductCard } from "../components/product-card";
+import { OrderForm } from "../components/order-form";
 import { motion } from "framer-motion";
 
 // Import generated assets
-import heroImage from "@assets/generated_images/elegant_dark_mood_jamaican_spices_and_ingredients.png";
-import cakeImage from "@assets/generated_images/rich_jamaican_christmas_fruit_cake.png";
-import sorrelImage from "@assets/generated_images/refreshing_jamaican_sorrel_drink.png";
+import heroImage from "/generated_images/elegant_dark_mood_jamaican_spices_and_ingredients.png";
+import cakeImage from "/generated_images/rich_jamaican_christmas_fruit_cake.png";
+import sorrelImage from "/generated_images/refreshing_jamaican_sorrel_drink.png";
 
 export default function Home() {
   const formSectionRef = useRef<HTMLDivElement>(null);

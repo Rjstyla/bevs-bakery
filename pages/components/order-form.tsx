@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
+import { Button } from "./ui/button";
 import {
   Form,
   FormControl,
@@ -10,10 +10,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+} from "./ui/form";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
+import { useToast } from "../hooks/use-toast";
 import { Minus, Plus } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 
