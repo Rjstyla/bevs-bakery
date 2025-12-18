@@ -12,8 +12,8 @@
     "VITE_API_URL": ""
   },
   "functions": {
-    "server": {
-      "runtime": "nodejs20.x",
+    "server/**": {
+      "runtime": "nodejs18.x",
       "memory": 1024,
       "maxDuration": 60
     }
