@@ -1,72 +1,71 @@
-@import "tailwindcss";
 @import "tw-animate-css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@custom-variant dark (&:is(.dark *));
+@layer base {
+  :root {
+    --radius: 0.5rem;
 
-@theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+    /* Jamaican Elegant Theme Palette */
+    /* Cream/Off-white Background */
+    --background: 40 30% 96%;
+    /* Deep Forest Green Foreground */
+    --foreground: 140 60% 10%;
 
-  /* Jamaican Elegant Theme Palette */
-  /* Cream/Off-white Background */
-  --color-background: hsl(40 30% 96%); 
-  /* Deep Forest Green Foreground */
-  --color-foreground: hsl(140 60% 10%); 
+    /* Cards - slightly warmer white */
+    --card: 40 20% 98%;
+    --card-foreground: 140 60% 10%;
 
-  /* Cards - slightly warmer white */
-  --color-card: hsl(40 20% 98%);
-  --color-card-foreground: hsl(140 60% 10%);
+    /* Popovers */
+    --popover: 40 30% 96%;
+    --popover-foreground: 140 60% 10%;
 
-  /* Popovers */
-  --color-popover: hsl(40 30% 96%);
-  --color-popover-foreground: hsl(140 60% 10%);
+    /* Primary: Rich Gold/Amber */
+    --primary: 45 90% 45%;
+    --primary-foreground: 140 60% 10%;
 
-  /* Primary: Rich Gold/Amber */
-  --color-primary: hsl(45 90% 45%);
-  --color-primary-foreground: hsl(140 60% 10%);
+    /* Secondary: Deep Forest Green */
+    --secondary: 140 50% 25%;
+    --secondary-foreground: 40 30% 96%;
 
-  /* Secondary: Deep Forest Green */
-  --color-secondary: hsl(140 50% 25%);
-  --color-secondary-foreground: hsl(40 30% 96%);
+    /* Muted */
+    --muted: 40 10% 90%;
+    --muted-foreground: 140 30% 40%;
 
-  /* Muted */
-  --color-muted: hsl(40 10% 90%);
-  --color-muted-foreground: hsl(140 30% 40%);
+    /* Accent: Deep Burgundy/Red (Sorrel color) */
+    --accent: 350 60% 35%;
+    --accent-foreground: 40 30% 96%;
 
-  /* Accent: Deep Burgundy/Red (Sorrel color) */
-  --color-accent: hsl(350 60% 35%);
-  --color-accent-foreground: hsl(40 30% 96%);
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
 
-  /* Destructive */
-  --color-destructive: hsl(0 84% 60%);
-  --color-destructive-foreground: hsl(0 0% 98%);
+    /* Borders */
+    --border: 140 20% 85%;
+    --input: 140 20% 85%;
+    --ring: 45 90% 45%;
 
-  /* Borders */
-  --color-border: hsl(140 20% 85%);
-  --color-input: hsl(140 20% 85%);
-  --color-ring: hsl(45 90% 45%);
+    /* Charts */
+    --chart-1: 45 90% 45%;
+    --chart-2: 140 50% 25%;
+    --chart-3: 350 60% 35%;
+    --chart-4: 40 30% 80%;
+    --chart-5: 40 30% 60%;
 
-  --color-chart-1: hsl(45 90% 45%);
-  --color-chart-2: hsl(140 50% 25%);
-  --color-chart-3: hsl(350 60% 35%);
-  --color-chart-4: hsl(40 30% 80%);
-  --color-chart-5: hsl(40 30% 60%);
+    /* Sidebar */
+    --sidebar: 140 50% 25%;
+    --sidebar-foreground: 40 30% 96%;
+    --sidebar-primary: 45 90% 45%;
+    --sidebar-primary-foreground: 140 60% 10%;
+    --sidebar-accent: 140 40% 30%;
+    --sidebar-accent-foreground: 40 30% 96%;
+    --sidebar-border: 140 40% 35%;
+    --sidebar-ring: 45 90% 45%;
 
-  --color-sidebar: hsl(140 50% 25%);
-  --color-sidebar-foreground: hsl(40 30% 96%);
-  --color-sidebar-primary: hsl(45 90% 45%);
-  --color-sidebar-primary-foreground: hsl(140 60% 10%);
-  --color-sidebar-accent: hsl(140 40% 30%);
-  --color-sidebar-accent-foreground: hsl(40 30% 96%);
-  --color-sidebar-border: hsl(140 40% 35%);
-  --color-sidebar-ring: hsl(45 90% 45%);
-
-  --font-sans: 'Montserrat', sans-serif;
-  --font-serif: 'Playfair Display', serif;
-  
-  --radius: 0.5rem;
+    --font-sans: 'Montserrat', sans-serif;
+    --font-serif: 'Playfair Display', serif;
+  }
 }
 
 @layer base {

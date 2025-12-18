@@ -1,7 +1,7 @@
 import { useRef } from "react";
-import { Hero } from "./components/hero";
-import { ProductCard } from "./components/product-card";
-import { OrderForm } from "./components/order-form";
+import { Hero } from "@/components/hero";
+import { ProductCard } from "@/components/product-card";
+import { OrderForm } from "@/components/order-form";
 import { motion } from "framer-motion";
 
 // Import generated assets
