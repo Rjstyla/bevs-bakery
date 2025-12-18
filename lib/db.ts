@@ -8,6 +8,8 @@ if (!process.env.DATABASE_URL) {
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+  // Supabase requires SSL for connection
+  ssl: { rejectUnauthorized: false },
 });
 
 export const db = drizzle(pool, { schema });
