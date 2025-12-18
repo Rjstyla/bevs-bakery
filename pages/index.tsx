@@ -108,8 +108,8 @@ export default function Home() {
 
       <footer className="bg-secondary text-secondary-foreground py-12">
         <div className="container mx-auto px-4 text-center space-y-4">
-          <h3 className="text-2xl font-serif font-bold text-primary">Bev's Bakery</h3>
-          <p className="text-white/60 text-sm">© 2024 Bev's Bakery. Authentic Jamaican Traditions.</p>
+          <h3 className="text-2xl font-serif font-bold text-primary">Bev&apos;s Bakery</h3>
+          <p className="text-white/60 text-sm">© 2024 Bev&apos;s Bakery. Authentic Jamaican Traditions.</p>
         </div>
       </footer>
     </div>
