@@ -109,7 +109,7 @@ export function OrderForm() {
     <div className="w-full max-w-md mx-auto p-6 bg-card rounded-xl shadow-xl border border-border/40">
       <div className="mb-6 text-center">
         <h3 className="text-2xl font-serif font-bold text-secondary mb-2">Request an Order</h3>
-        <p className="text-muted-foreground text-sm">Tell us what you'd like, and we'll get baking.</p>
+        <p className="text-muted-foreground text-sm">Tell us what you&apos;d like, and we&apos;ll get baking.</p>
       </div>
       
       <Form {...form}>

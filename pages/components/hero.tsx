@@ -30,7 +30,7 @@ export function Hero({ backgroundImage, onCtaClick }: HeroProps) {
             EST. 2024
           </span>
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-white mb-2 tracking-tight drop-shadow-lg">
-            Bev's Bakery
+            Bev&apos;s Bakery
           </h1>
           <p className="text-xl md:text-2xl text-white/90 font-light font-sans tracking-wide max-w-2xl mx-auto drop-shadow-md">
             Authentic Jamaican flavors, baked with soul and tradition.

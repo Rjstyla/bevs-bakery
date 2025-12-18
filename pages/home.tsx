@@ -35,7 +35,7 @@ export default function Home() {
             <h2 className="text-4xl font-serif font-bold text-secondary mb-6">A Taste of Home</h2>
             <div className="w-24 h-1 bg-primary mx-auto mb-8 rounded-full" />
             <p className="text-lg text-muted-foreground leading-relaxed">
-              At Bev's Bakery, we believe in the power of tradition. Our recipes have been passed down through generations, capturing the authentic warmth and spice of Jamaica. From the rich, rum-soaked fruits in our Christmas cakes to the vibrant, gingery kick of our Sorrel, every item is crafted with love and patience.
+              At Bev&apos;s Bakery, we believe in the power of tradition. Our recipes have been passed down through generations, capturing the authentic warmth and spice of Jamaica. From the rich, rum-soaked fruits in our Christmas cakes to the vibrant, gingery kick of our Sorrel, every item is crafted with love and patience.
             </p>
           </motion.div>
         </section>
@@ -108,8 +108,8 @@ export default function Home() {
 
       <footer className="bg-secondary text-secondary-foreground py-12">
         <div className="container mx-auto px-4 text-center space-y-4">
-          <h3 className="text-2xl font-serif font-bold text-primary">Bev's Bakery</h3>
-          <p className="text-white/60 text-sm">© 2024 Bev's Bakery. Authentic Jamaican Traditions.</p>
+          <h3 className="text-2xl font-serif font-bold text-primary">Bev&apos;s Bakery</h3>
+          <p className="text-white/60 text-sm">© 2024 Bev&apos;s Bakery. Authentic Jamaican Traditions.</p>
         </div>
       </footer>
     </div>

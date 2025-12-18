@@ -1,6 +1,7 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import Image from "next/image";
 
 interface ProductCardProps {
   title: string;
@@ -16,10 +17,11 @@ export function ProductCard({ title, description, price, image, tags = [], onOrd
   return (
     <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300 group bg-card" data-testid={testId}>
       <div className="relative aspect-square overflow-hidden">
-        <img 
+        <Image 
           src={image} 
           alt={title} 
-          className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
           <p className="text-white font-serif italic text-sm">Taste the tradition</p>
